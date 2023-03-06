@@ -1,52 +1,80 @@
 const textElement = document.getElementById('text')
 const containerClass = document.getElementById('container')
 const inventoryClass = document.getElementById('inventory')
+const title = document.getElementById('title')
+const subtitle = document.getElementById('subtitle')
 const optionButtonsElement = document.getElementById('option-buttons')
-const blob = document.getElementById('blob')
-
-window.onpointermove = event => {
-	const { clientX, clientY } = event;
-
-	blob.animate({
-		left: `${clientX}px`,
-		top: `${clientY}px`
-	}, { duration: 3000, fill: "forwards" });
-}
+const backButton = document.getElementById('history')
 
 let inventory = []
+let history = []
+let stamina = 100
+let prev = [0];
+x = 0
 
-function startGame() {
+async function startGame() {
 	inventory = []
-	showTextNode(1)
+	history = []
+	setTimeout(() => {
+		containerClass.style.opacity = "1";
+		containerClass.style.padding = "50px";
+	}, 250)
+	showTextNode(0)
 }
 
-function showTextNode(textNodeIndex) {
-	const textNode = textNodes.find(textNode => textNode.id === textNodeIndex)
+async function showTextNode(textNodeIndex) {
+	let x = 0
+	console.log(prev)
+	console.log(prev.length > 1)
+	const textNode = scripts[textNodeIndex]
 	textElement.innerText = textNode.text
 	while (optionButtonsElement.firstChild) {
 		optionButtonsElement.removeChild(optionButtonsElement.firstChild)
 	}
 
-	textNode.options.forEach(async option => {
+	if (textNode.noBack) backButton.style.left = '-50%'
+	else if (prev.length > 1) backButton.style.left = '-7%'
+
+	backButton.addEventListener("click", () => {
+		document.getElementById('myAudio').play();
+		containerClass.style.opacity = "0";
+		containerClass.style.padding = `100px`;
+		inventoryClass.style.opacity = "0";
+		setTimeout(() => {
+			inventoryClass.innerText = `Inventory: ${inventory.join(", ") || "Nothing"}`
+			containerClass.style.opacity = "1"
+			containerClass.style.padding = "50px";
+			prev.pop()
+			showTextNode(prev[prev.length - 1]);
+		}, 500)
+	});
+
+	textNode.options.forEach(option => {
 		if (showOption(option)) {
 			const button = document.createElement('button')
 			button.innerText = option.text
 			button.classList.add('btn')
 			button.addEventListener('click', async () => {
+				prev.push(option.next)
+				await document.getElementById('myAudio').play();
 				containerClass.style.opacity = "0";
+				containerClass.style.padding = `100px`;
 				inventoryClass.style.opacity = "0";
-				setTimeout(() => {
-					selectOption(option);
+				setTimeout(async() => {
+					await selectOption(option);
 					inventoryClass.innerText = `Inventory: ${inventory.join(", ") || "Nothing"}`
 					containerClass.style.opacity = "1"
+					containerClass.style.padding = "50px";
 				}, 500)
 			})
 			optionButtonsElement.appendChild(button)
+			button.style.opacity = "0"
+			setTimeout(() => { button.style.opacity = "1" }, Math.round(Math.random() * 250))
 		}
 	})
 }
 
-function showOption(option) {
+async function showOption(option) {
 	if (option.required) {
 		x = 0
 		i = option.required.length
@@ -60,9 +88,9 @@ function showOption(option) {
 	else return true;
 }
 
-function selectOption(option) {
-	const nextTextNodeId = option.nextText
-	if (nextTextNodeId <= 0) {
+async function selectOption(option) {
+	const nextNodeId = option.next
+	if (nextNodeId <= 0) {
 		return startGame()
 	}
 
@@ -71,34 +99,41 @@ function selectOption(option) {
 			inventory.push(item)
 		})
 	}
-	
+
 	if (option.removeItem) {
 		option.removeItem.forEach((item) => {
 			inventory.splice(inventory.indexOf(item), 1)
 		})
 	}
+
 	if (option.showInv !== false) inventoryClass.style.opacity = "1";
-	showTextNode(nextTextNodeId)
+
+	if (option.run) option.run()
+	showTextNode(nextNodeId)
+	const button = document.createElement('div')
+	button.innerText = `< Back`
+	button.classList.add('history')
 }
 
-const textNodes = [
+const scripts = [
 	{
-		id: 1,
 		text: 'You wake up in a strange place and you see a jar of blue goo near you.',
 		options: [
 			{
 				text: 'Take the goo',
 				addItem: ["Blue Goo"],
-				nextText: 2
+				next: 1,
+				run: function() {
+
+				}
 			},
 			{
 				text: 'Leave the goo',
-				nextText: 2
+				next: 1
 			}
 		]
 	},
 	{
-		id: 2,
 		text: 'You venture forth in search of answers to where you are when you come across a merchant.',
 		options: [
 			{
@@ -106,140 +141,131 @@ const textNodes = [
 				required: ["Blue Goo"],
 				addItem: ["Sword"],
 				removeItem: ["Blue Goo"],
-				nextText: 3
+				next: 2
 			},
 			{
 				text: 'Trade the goo for a shield',
 				required: ["Blue Goo"],
 				addItem: ["Shield"],
 				removeItem: ["Blue Goo"],
-				nextText: 3
+				next: 2
 			},
 			{
 				text: 'Ignore the merchant',
-				nextText: 3
+				next: 2
 			}
 		]
 	},
 	{
-		id: 3,
 		text: 'After leaving the merchant you start to feel tired and stumble upon a small town next to a dangerous looking castle.',
 		options: [
 			{
 				text: 'Explore the castle',
-				nextText: 4,
+				next: 3,
 				showInv: false
 			},
 			{
 				text: 'Find a room to sleep at in the town',
-				nextText: 5,
+				next: 4,
 				showInv: false
 			},
 			{
 				text: 'Find some hay in a stable to sleep in',
-				nextText: 6
+				next: 5
 			}
 		]
 	},
 	{
-		id: 4,
 		text: 'You are so tired that you fall asleep while exploring the castle and are killed by some terrible monster in your sleep.',
 		options: [
 			{
 				text: 'Restart',
-				nextText: -1
+				next: -1
 			}
 		]
 	},
 	{
-		id: 5,
 		text: 'Without any money to buy a room you break into the nearest inn and fall asleep. After a few hours of sleep the owner of the inn finds you and has the town guard lock you in a cell.',
 		options: [
 			{
 				text: 'Restart',
-				nextText: -1
+				next: -1
 			}
 		]
 	},
 	{
-		id: 6,
 		text: 'You wake up well rested and full of energy ready to explore the nearby castle.',
 		options: [
 			{
 				text: 'Explore the castle',
-				nextText: 7
+				next: 6
 			}
 		]
 	},
 	{
-		id: 7,
 		text: 'While exploring the castle you come across a horrible monster in your path.',
 		options: [
 			{
 				text: 'Try to run',
-				nextText: 8,
+				next: 7,
 				showInv: false
 			},
 			{
 				text: 'Attack it with your sword',
 				required: ["Sword"],
 				removeItem: ["Sword"],
-				nextText: 9,
+				next: 8,
 				showInv: false
 			},
 			{
 				text: 'Hide behind your shield',
 				required: ["Shield"],
 				removeItem: ["Shield"],
-				nextText: 10,
+				next: 9,
 				showInv: false
 			},
 			{
 				text: 'Throw the blue goo at it',
 				required: ["Blue Goo"],
 				removeItem: ["Blue Goo"],
-				nextText: 11,
+				next: 10,
 				showInv: false
 			}
 		]
 	},
 	{
-		id: 8,
 		text: 'Your attempts to run are in vain and the monster easily catches.',
 		options: [
 			{
 				text: 'Restart',
-				nextText: -1
+				next: -1
 			}
 		]
 	},
 	{
-		id: 9,
 		text: 'You foolishly thought this monster could be slain with a single sword.',
 		options: [
 			{
 				text: 'Restart',
-				nextText: -1
+				next: -1
 			}
 		]
 	},
 	{
-		id: 10,
 		text: 'The monster laughed as you hid behind your shield and ate you.',
 		options: [
 			{
 				text: 'Restart',
-				nextText: -1
+				next: -1
 			}
 		]
 	},
 	{
-		id: 11,
 		text: 'You threw your jar of goo at the monster and it exploded. After the dust settled you saw the monster was destroyed. Seeing your victory you decide to claim this castle as your and live out the rest of your days there.',
 		options: [
 			{
 				text: 'Congratulations. Play Again.',
-				nextText: -1
+				next: -1
 			}
 		]
 	}
