@@ -26,9 +26,10 @@ h1 {
   margin: 0rem;
   position: absolute;
 	display: flex;
-  left: 0%;
+  left: 15%;
   top: 0%;
   z-index: 1;
+	transition: all .5s ease-in-out;
 }
 
 h2 {
@@ -40,9 +41,10 @@ h2 {
   margin: 0rem;
   position: absolute;
 	display: flex;
-  left: 1vw;
+  left: 5%;
   top: 4vw;
   z-index: 1;
+	transition: all .5s ease-in-out;
 }
 
 .container {
@@ -65,6 +67,7 @@ h2 {
 
 .btn-grid {
 	display: grid;
+	justify-content: center;
   grid-template-columns: repeat(2, auto);
   gap: 10px;
   margin-top: 20px;
@@ -76,7 +79,7 @@ h2 {
 	background: none;
   border: .1px solid white;
   border-radius: 5px;
-  padding: 5px 10px;
+  padding: 5px 50px;
   color: white;
   outline: none;
 	opacity: 0.5;

@@ -25,6 +25,10 @@ function startGame() {
 }
 
 function showTextNode(textNodeIndex) {
+	if (textNodeIndex > 0) {
+		title.style.opacity = '0';
+		subtitle.style.opacity = '0';
+	}
 	statuses = statuses.filter((c, index) => {
 		return statuses.indexOf(c) === index;
 	});
@@ -162,6 +166,7 @@ const scripts = [
 			{
 				text: 'Stand Up',
 				next: 1,
+				showInv: false
 			},
 		]
 	}, // 0
@@ -170,7 +175,8 @@ const scripts = [
 		options: [
 			{
 				text: `Look Around`,
-				next: 2
+				next: 2,
+				showInv: false
 			}
 		]
 	}, // 1
@@ -180,10 +186,12 @@ const scripts = [
 			{
 				text: 'Walk to the City',
 				next: 4,
+				showInv: false
 			},
 			{
 				text: 'Wait Patiently',
 				next: 3,
+				showInv: false
 			},
 		]
 	}, // 2
@@ -193,10 +201,12 @@ const scripts = [
 			{
 				text: 'Walk to the City',
 				next: 4,
+				showInv: false
 			},
 			{
 				text: 'Wait Patiently',
 				next: 3,
+				showInv: false
 			},
 		]
 	}, // 3
@@ -236,12 +246,14 @@ const scripts = [
 			{
 				text: `That's terrifying...`,
 				run: () => { introvert += 1 },
-				next: 10
+				next: 10,
+				showInv: false
 			},
 			{
 				text: `Oh, this'll be exciting!`,
 				run: () => { extrovert += 1 },
-				next: 9
+				next: 9,
+				showInv: false
 			}
 		]
 	}, // 8
@@ -289,7 +301,8 @@ const scripts = [
 			},
 			{
 				text: `"Hello...sir...?"`,
-				next: 14
+				next: 14,
+				showInv: false
 			},
 		]
 	}, // 12
@@ -298,7 +311,8 @@ const scripts = [
 		options: [
 			{
 				text: `"Uh..."`,
-				next: 17
+				next: 17,
+				showInv: false
 			}
 		]
 	}, // 13
@@ -308,12 +322,14 @@ const scripts = [
 			{
 				text: `"Well..."`,
 				status: [`9-1`],
-				next: 15
+				next: 15,
+				showInv: false
 			},
 			{
 				text: `"Actually..."`,
 				status: [`9-2`],
-				next: 16
+				next: 16,
+				showInv: false
 			},
 		]
 	}, // 14
@@ -550,6 +566,7 @@ const scripts = [
 			{
 				text: `Throw Blue Goo`,
 				required: [`Blue Goo`],
+				removeItem: ["Blue Goo"],
 				next: 34
 			},
 			{
@@ -603,7 +620,7 @@ const scripts = [
 				next: 38
 			},
 			{
-				taxt: `Apologize`,
+				text: `Apologize`,
 				run: () => { introvert += 1 },
 				next: 38
 			}
@@ -728,10 +745,10 @@ const scripts = [
 		]
 	}, // 46
 	{
-		text: `You trek through the forest, the once sunny sky now turning amber from the Sunset. And after a while of walking, you find a cave, with a dead campfire outside.`,
+		text: `You trek through the forest, the once sunny sky now turning amber from the Sunset.`,
 		options: [
 			{
-				text: `Enter`,
+				text: `Beautiful`,
 				next: 49
 			},
 			{
@@ -741,86 +758,463 @@ const scripts = [
 		]
 	}, // 47
 	{
-		text: `You instantly say "Screw that!" and walk in a complete new direction, away from both the kingdom and the cave... and you get lost, so you retrace your steps.`,
+		text: `Suddenly, you collapse face first into the dirt. Looking what may have attacked you, you find a small (ominously glowing) book with the name "The Introvert Advantage" by Marti Olsen Laney.`,
 		options: [
 			{
-				text: `>:/`,
-				next: 47
-			}
-		]
-	}, // 48
-	{
-		text: `You go into the dark cave, just barely being able to see by the light from outside. You can feel the cold damp air around you. That is, till you hear commotion further in.`,
-		options: [
-			{
-				text: `Investigate`,
-				next: 50
-			},
-			{
-				text: `"Screw That"`,
-				next: 48
-			},
-		]
-	}, // 49
-	{
-		text: `Running in, you find another monster, as well as a fighter trying to slay it. You could have sworn the monster wasn't that big in the castle but now isn't the time to question that.`,
-		options: [
-			{
-				text: `"How Joyful!"`,
+				text: `Take the Book`,
 				status: ['extrovert'],
+				next: 49
+			},
+      {
+				text: `Take the Book`,
+				status: ['introvert'],
 				next: 51
 			},
-			{
-				text: `"Uh oh..."`,
+      {
+				text: `Leave the Book`,
+				next: 50
+			},
+		]
+	}, // 48
+  {
+    text: `You pick up the book, the sentences not grabbing you immediately, but you keep reading.`,
+    options: [
+      {
+        text: `Keep Reading`,
+        next: 62
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 49
+  {
+    text: `You grumble at the inconvenient placement of the book and continue on your path through the forest.`,
+    options: [
+      {
+        text: `"Stupid Book..."`,
+        next: 52
+      }
+    ]
+  }, // 50
+  {
+    text: `You pick up the book, the sentences you've read grabbing your attention immediately.`,
+    options: [
+      {
+        text: `Keep Reading`,
+        next: 53
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      }
+    ]
+  }, // 51
+  {
+    text: `Suddenly, you collapse face first into the dirt. Looking what may have attacked you, you find a small (ominously glowing) book with the name-- oh. It's the same book. It seemed to have moved.`,
+    options: [
+      {
+				text: `Take the Book`,
+				status: ['extrovert'],
+				next: 49
+			},
+      {
+				text: `Take the Book`,
 				status: ['introvert'],
-				next: 52
+				next: 51
 			},
-		]
-	}, // 50
-	{
-		text: `The two seem to be in a battle, however the warrior is playing it a bit too safe. They repeatedly hide for cover and don't take a swing unless absolutely sure they'll hit.`,
-		options: [
-			{
-				text: `I see`,
-				next: 53
-			}
-		]
-	}, // 51
-	{
-		text: `The two seem to be in a battle, however the warrior is dominating the situation. Even with plenty of cover, not once do you see either of them even consider dodging a strike.`,
-		options: [
-			{
-				text: `"Dangerous."`,
-				next: 53
-			}
-		]
-	}, // 52
-	{
-		text: `The monster is easily overpowering them like this, if you don't help, they likely won't make it.`,
-		options: [
-			{
-				text: `Help Them`,
-				next: 55
+      {
+				text: `Leave the Book`,
+				next: 50
 			},
-			{
-				text: `"Screw that, they got it."`,
-				next: 48
-			}
-		]
-	}, // 53
-	{
-		text: `This amount of effort appears to be heavily taxing. If you don't help, they likely can't withstand themselves much longer.`,
-		options: [
-			{
-				text: `Help Them`,
-				next: 56
-			},
-			{
-				text: `"Screw that, they got it."`,
-				next: 48
-			}
-		]
-	}, // 54
+    ]
+  }, // 52
+  {
+    text: `"Introversion is at its root a type of temperament. It is not the same as shyness or having a withdrawn personality, and it is not pathological." (Laney, 11)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 54
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 53
+  {
+    text: `"[Introversion] is also not something you can change. But you can learn to work with it, not against it." (Laney, 11)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 55
+      },
+      {
+        text: `Turn back a Page`,
+        next: 53
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 54
+  {
+    text: `"Introverts are like a rechargeable battery. They need to stop expending energy and rest in order to recharge. This is what a less stimulating environment provides for introverts. It restores energy." (Laney, 11)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 56
+      },
+      {
+        text: `Turn back a Page`,
+        next: 54
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 55
+  {
+    text: `"Counter to our stereotypes of introverts, they are not necessarily quiet or withdrawn, but their focus is inside their heads. They need a quiet, reflective place where they can think things through and recharge themselves." (Laney, 13)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 57
+      },
+      {
+        text: `Turn back a Page`,
+        next: 55
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 56
+  {
+    text: `"For introverts who have a high level of internal activity, anything coming from the outside raises their intensity level index quickly. It’s kind of like being tickled—the sensation goes from feeling good and fun to 'too much' and uncomfortable in a split second." (Laney, 13)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 58
+      },
+      {
+        text: `Turn back a Page`,
+        next: 56
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 57
+  {
+    text: `"Introverts enjoy complexity when they can focus on one or two areas, without pressure. But if they have too many projects, they easily feel overwhelmed." (Laney, 14)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 59
+      },
+      {
+        text: `Turn back a Page`,
+        next: 57
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 58
+  {
+    text: `"Introverts like depth and will limit their experiences but feel each of them deeply. Often, they have fewer friends but more intimacy." (Laney 15)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 60
+      },
+      {
+        text: `Turn back a Page`,
+        next: 58
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 59
+  {
+    text: `"[Katie] Couric is peppy, spontaneous, and articulate. [Diane] Sawyer is restrained, lower-keyed, and more deliberate. Both are effective in their jobs." (Laney, 25)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 61
+      },
+      {
+        text: `Turn back a Page`,
+        next: 60
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 60
+  {
+    text: `"If you don't pace yourself, you can end up feeling stressed and overwhelmed, unable to do anything. It gets worse if you procrastinate." (Laney, 223)`,
+    options: [
+      {
+        text: `Read about Extroverts`,
+        next: 62
+      },
+      {
+        text: `Turn back a Page`,
+        next: 60
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 61
+  {
+    text: `"When extroversion is taken for granted as the natural outcome of healthy development, introversion can't help but become the "dreaded other." (Laney, 6)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 63
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 62
+  {
+    text: `"Our culture values and rewards the qualities of extroverts. America was built on rugged individualism and the importance of citizens speaking their minds." (Laney, 5)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 64
+      },
+      {
+        text: `Turn back a Page`,
+        next: 62
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 63
+  {
+    text: `"[Extroverts] are energized by the external world—by activities, people, places, and things. They are energy spenders." (Laney, 11)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 65
+      },
+      {
+        text: `Turn back a Page`,
+        next: 63
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 64
+  {
+    text: `"By and large, extroverts like breadth—lots of friends and experiences, knowing a little bit about everything, being a generalist." (Laney, 14)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 66
+      },
+      {
+        text: `Turn back a Page`,
+        next: 64
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 65
+  {
+    text: `"Consider the life of Prince William, of the Royal Family in Great Britain. He dislikes having a fuss made over him and having his picture taken, and he cares more about privacy than any other royal." (Laney, 27)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 67
+      },
+      {
+        text: `Turn back a Page`,
+        next: 65
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 66
+  {
+    text: `"Extroverts like socializing and require the company of other people, but it’s as much about the need to be stimulated engage me, challenge me, give me something to react to —as it is to feel related." (Laney, 31)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 68
+      },
+      {
+        text: `Turn back a Page`,
+        next: 66
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 67
+  {
+    text: `"Since extroverts get their energy from social sources and activities, they like being out on the town, flitting from flower to flower. They say, Just give me the stimulation jolt, and off I go." (Laney, 32)`,
+    options: [
+      {
+        text: `Turn the Page`,
+        next: 69
+      },
+      {
+        text: `Turn back a Page`,
+        next: 67
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 68
+  {
+    text: `"Extroverts, being the majority, influence the entire cultural view of introversion. Extroverts’ verbal ease intimidates introverts, making it even easier for them to conclude that they shouldn’t speak." (Laney, 32)`,
+    options: [
+      {
+        text: `Read about Introverts`,
+        next: 53
+      },
+      {
+        text: `Turn back a Page`,
+        next: 68
+      },
+      {
+        text: `Stop Reading`,
+        next: 70
+      },
+    ]
+  }, // 69
+  {
+    text: `You close the book and slip it in your pocket. Well, you attempted to. You just happen to just have baby pockets today.`,
+    options: [
+      {
+        text: `"Stupid Pants..."`,
+        addItem: ["TIA Book"],
+        showInv: true,
+        next: 71
+      }
+    ]
+  }, // 70
+  {
+    text: `"Hey, there's my lost book from my library! I wonder how it got here. Where did you find it?" The King looks intriguingly at the book.`,
+    options: [
+      {
+        text: `"I tripped over it."`,
+        next: 72
+      },
+      {
+        text: `"I've had it this whole time."`,
+        removeItem: ["TIV Book"],
+        showInv: true,
+        next: 73
+      }
+    ]
+  }, // 71
+  {
+    text: `"Oh. Well, what was it even doing out here? Meh, no matter, you can keep it. Consider it a thanks considering you seem interested in it." He chuckles.`,
+    options: [
+      {
+        text: `"Thank you."`,
+        next: 74
+      }
+    ]
+  }, // 72
+  {
+    text: `"Meh, no matter. I've got to return this back to the library." He takes the book out of your hands (you just gave up trying to put it in your pocket) and chuckles.`,
+    options: [
+      {
+        text: `"Oh."`,
+        next: 74
+      }
+    ]
+  }, // 73
+  {
+    text: `"Look ahead, there's a cave upon us!" You look ahead, noticing a cave upon you. "Too late to back out now," the king remarks.`,
+    options: [
+      {
+        text: `Proceed (Too late to back out now)`,
+        next: 75
+      }
+    ]
+  }, // 74
+  {
+    text:`You go into the dark cave, just barely being able to see by the light from outside. You can feel the cold damp air around you. That is, till you hear commotion further in.`,
+    options: [
+      {
+        text: `Investigate Commotion`,
+        next: 76
+      },
+      {
+        text: `Leave`,
+        next: 78
+      }
+    ]
+  }, // 75
+  {
+    text: `Running in, you find another monster, as well as a fighter trying to slay it. You could have sworn the monster wasn't that big in the castle but now isn't the time to question that.`,
+    option: [
+      {
+        text: `Don't ask questions (there's no time to)`,
+        status: ['extrovert'],
+        next: 77
+      },
+      {
+        text: `Don't ask questions (there's no time to)`,
+        status: ['introvert'],
+        next: 79
+      },
+    ]
+  }, // 76
+  {
+    text: `The two seem to be in a battle, however the warrior is playing it a bit too safe. They repeatedly hide for cover and don't take a swing unless absolutely sure they'll hit.`,
+    options: [
+      {
+        text: `"Uh oh!"`,
+        next: 78
+      }
+    ]
+  }, // 77
+  {
+    text: `The monster is easily overpowering them like this, if you don't help, they likely won't make it.`
+  }, // 78
+  {
+    text: `The two seem to be in a battle, however the warrior is dominating the situation. Even with plenty of cover, not once do you see either of them even consider dodging a strike.`,
+    options: [
+      {
+        text: `"They seem fine to me."`
+      }
+    ]
+  }, // 79
+  {
+    text: `Well, actually, this amount of effort appears to be heavily taxing. If you don't help, they likely can't withstand themselves much longer.`
+  } // 80
 ]
 
 startGame()
