@@ -65,6 +65,22 @@ h2 {
 	box-shadow: 0 0 10px 2.5px;
 }
 
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  
+  to {
+    opacity: 1;
+  }
+}
+.block {
+	color: white;
+	opacity: 0;
+	animation-fill-mode: forwards;
+	transition: all .5s ease-in;
+}
+
 .btn-grid {
 	display: grid;
 	justify-content: center;
